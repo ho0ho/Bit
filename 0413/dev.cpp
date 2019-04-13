@@ -1,5 +1,8 @@
 #include <iostream>
+#include <cstdlib>
 using namespace std;
+
+#pragma warning (disable : 4996)
 
 void swap1(int &ra, int &rb) {
 	int tmp;
@@ -115,11 +118,40 @@ public:
 	Number& operator = (const Number& right) {
 		fir = right.fir;
 		sec = right.sec;
+		return *this;
+	}
+	Number& DisplayAndRead(const char *msg) {
+		cout << msg;
+		cin >> fir >> sec;
+		return *this;
+	}
+	void printData(const char *msg) {
+		cout << msg << " " << fir << " + " << sec << endl;
+	}
+
+	Number& addition(const Number& a, const Number& b) {
+		fir = a.fir + b.fir;
+		sec = a.sec + b.sec;
+		return *this;
 	}
 	int getFir() { return fir; }
 	int getSec() { return sec; }
 	void view(void) { cout << fir << "," << sec << endl; }
 };
+//
+//int main() {
+//	Number a, b, c;
+//	a.DisplayAndRead(" A = ");
+//	b.DisplayAndRead(" B = ");
+//	c.addition(a, b);
+//	a.printData(" A = ");
+//	b.printData(" B = ");
+//	c.printData(" A+B = ");
+//	
+//	getchar();
+//	getchar();
+//	return 0;
+//}
 //
 //int main() {
 //	Number e;		// error. Number() 형식의 생성자가 정의되지 않았기 때문.
@@ -133,22 +165,74 @@ public:
 //	getchar();
 //	return 0;
 //}
+//
+//struct shallow {
+//	int key;
+//	char *p;		// 포인터는 그 값(주소)만 복사(얕은 복사)
+//};
+//
+//struct deep {
+//	int key;
+//	char p[10];		// 배열은 아예 공간을 할당하여 복사(깊은 복사)
+//};
+//
+//int main() {
+//	shallow a = { 10, "AAA" }, b;
+//	deep c = { 20, "CCC" }, d;
+//
+//	b = a;		// 구조체는 
+//	d = c;
+//	return 0;
+//}
 
-struct shallow {
-	int key;
-	char *p;		// 포인터는 그 값(주소)만 복사(얕은 복사)
+
+class Wrap {
+public:
+	virtual void eat() { }
 };
 
-struct deep {
-	int key;
-	char p[10];		// 배열은 아예 공간을 할당하여 복사(깊은 복사)
+class bob : public Wrap {
+public:
+	void eat() { cout << "밥먹다" << endl; }
 };
+
+class kok : public Wrap {
+public:
+	void eat() { cout << "국먹다" << endl; }
+};
+
+class kim : public Wrap {
+public:
+	void eat() { cout << "김먹다" << endl; }
+};
+
+//class Brunch {
+//public:
+//	void eattherice(bob &rb) { rb.eat(); }
+//	void eatthesoup(kok &rok) { rok.eat(); }
+//	void eatthekim(kim &rk) { rk.eat(); }
+//};
+
+void eat(Wrap& w) {
+	w.eat();
+}
 
 int main() {
-	shallow a = { 10, "AAA" }, b;
-	deep c = { 20, "CCC" }, d;
+	/*Brunch bb;
+	bob ob;
+	kok ok;
+	kim im;
+	bb.eattherice(ob);
+	bb.eatthesoup(ok);
+	bb.eatthekim(im);*/
 
-	b = a;		// 구조체는 
-	d = c;
+	bob b;
+	kok k;
+	kim ki;
+	eat(b);
+	eat(k);
+	eat(ki);
+
+	getchar();
 	return 0;
 }
