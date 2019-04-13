@@ -31,7 +31,7 @@ struct Number {
 	int snd;
 };
 
-Number& NumberAdd(const Number pa, const Number pb) {
+Number& NumberAdd(const Number &pa, const Number &pb) {
 	Number *add = (Number *)malloc(sizeof(Number));		// 변수 add는 local이라 함수 리턴후 소멸
 	add->fst = pa.fst + pb.fst;							// 그러나 그 메모리는 힙에 남아있고 그 메모리는 그대로(&) 넘기므로 유효
 	add->snd = pa.snd + pb.snd;							// malloc으로 받은 메모리의 스코프는 free를 만날때까지!(함수의 리턴과 상관X)
@@ -49,6 +49,8 @@ int main() {
 	Number &rpa = NumberAdd(*pa, *pb);
 	cout << rpa.fst << ", " << rpa.snd << endl;
 	free(&rpa);			// rpa 메모리 해제
+	free(pa);
+	free(pb);
 	getchar();
 	return 0;
 }
