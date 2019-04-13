@@ -106,21 +106,49 @@ class Number {
 	int sec;
 public:
 	Number(int fir = 0, int sec = 0) : fir(fir), sec(sec) {}
+	Number(const Number& other) {		// copy constructor
+		fir = other.fir;
+		sec = other.sec;
+	}
+	~Number() {}
+
+	Number& operator = (const Number& right) {
+		fir = right.fir;
+		sec = right.sec;
+	}
 	int getFir() { return fir; }
 	int getSec() { return sec; }
 	void view(void) { cout << fir << "," << sec << endl; }
-	~Number() {}
+};
+//
+//int main() {
+//	Number e;		// error. Number() 형식의 생성자가 정의되지 않았기 때문.
+//	Number e2();		// error. Number() 형식의 생성자가 정의되었어도 이렇게 정의하지않도록 주의
+//
+//	Number n(2);		// Number객체 n 생성
+//	Number *pn = new Number(3, 5);
+//	n.view();
+//	pn->view();
+//
+//	getchar();
+//	return 0;
+//}
+
+struct shallow {
+	int key;
+	char *p;		// 포인터는 그 값(주소)만 복사(얕은 복사)
+};
+
+struct deep {
+	int key;
+	char p[10];		// 배열은 아예 공간을 할당하여 복사(깊은 복사)
 };
 
 int main() {
-	Number e;		// error. Number() 형식의 생성자가 정의되지 않았기 때문.
-	Number e2();		// error. Number() 형식의 생성자가 정의되었어도 이렇게 정의하지않도록 주의
+	shallow a = { 10, "AAA" }, b;
+	deep c = { 20, "CCC" }, d;
 
-	Number n(2);		// Number객체 n 생성
-	Number *pn = new Number(3, 5);
-	n.view();
-	pn->view();
-
-	getchar();
+	b = a;		// 구조체는 
+	d = c;
 	return 0;
 }
