@@ -26,17 +26,17 @@ void swap_p(int *(&pa), int *(&pb)) {	// pa의 타입은 int *. 인자로 전달받는 메모
 //	return 0;
 //}
 
-struct Number {
-	int fst;
-	int snd;
-};
-
-Number& NumberAdd(const Number &pa, const Number &pb) {
-	Number *add = (Number *)malloc(sizeof(Number));		// 변수 add는 local이라 함수 리턴후 소멸
-	add->fst = pa.fst + pb.fst;							// 그러나 그 메모리는 힙에 남아있고 그 메모리는 그대로(&) 넘기므로 유효
-	add->snd = pa.snd + pb.snd;							// malloc으로 받은 메모리의 스코프는 free를 만날때까지!(함수의 리턴과 상관X)
-	return *add;
-}
+//struct Number {
+//	int fst;
+//	int snd;
+//};
+//
+//Number& NumberAdd(const Number &pa, const Number &pb) {
+//	Number *add = (Number *)malloc(sizeof(Number));		// 변수 add는 local이라 함수 리턴후 소멸
+//	add->fst = pa.fst + pb.fst;							// 그러나 그 메모리는 힙에 남아있고 그 메모리는 그대로(&) 넘기므로 유효
+//	add->snd = pa.snd + pb.snd;							// malloc으로 받은 메모리의 스코프는 free를 만날때까지!(함수의 리턴과 상관X)
+//	return *add;
+//}
 
 //int main() {
 //	Number *pa = (Number *)malloc(sizeof(Number));
@@ -84,19 +84,43 @@ int func4(int &ra) {
 	return (ra = 40);
 }
 
+//int main() {
+//	int a = 10;
+//	int *pa = &a;
+//	func1(pa);
+//	cout << *pa << endl;
+//	func2(pa);
+//	cout << *pa << endl;
+//
+//	int &rb = func3(a);		// a, func3의 매개변수 ra, rb 세 변수 모두 동일한 하나의 메모리에 대한 이름
+//	int b = func3(a);		// b는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음 => 레퍼런스값을 일반변수로 받을 때도 복사
+//	int c = func4(a);		// c는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음
+//	int &d = func4(a);		// error. func4(a)값은 상수. 레퍼런스 변수(d)는 상수값(func4의 리턴은 int)을 받을 수 없음.
+//	const int &cd = func4(a);		// 레퍼런스변수가 상수값을 받으려면 const키워드 사용하면 됨.
+//
+//	return 0;
+//}
+
+class Number {
+	int fir;
+	int sec;
+public:
+	Number(int fir = 0, int sec = 0) : fir(fir), sec(sec) {}
+	int getFir() { return fir; }
+	int getSec() { return sec; }
+	void view(void) { cout << fir << "," << sec << endl; }
+	~Number() {}
+};
+
 int main() {
-	int a = 10;
-	int *pa = &a;
-	func1(pa);
-	cout << *pa << endl;
-	func2(pa);
-	cout << *pa << endl;
+	Number e;		// error. Number() 형식의 생성자가 정의되지 않았기 때문.
+	Number e2();		// error. Number() 형식의 생성자가 정의되었어도 이렇게 정의하지않도록 주의
 
-	int &rb = func3(a);		// a, func3의 매개변수 ra, rb 세 변수 모두 동일한 하나의 메모리에 대한 이름
-	int b = func3(a);		// b는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음 => 레퍼런스값을 일반변수로 받을 때도 복사
-	int c = func4(a);		// c는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음
-	int &d = func4(a);		// error. func4(a)값은 상수. 레퍼런스변수는 상수값을 받을 수 없음.
-	const int &cd = func4(a);		// 레퍼런스변수가 상수값을 받으려면 const키워드 사용하면 됨.
+	Number n(2);		// Number객체 n 생성
+	Number *pn = new Number(3, 5);
+	n.view();
+	pn->view();
 
+	getchar();
 	return 0;
 }
