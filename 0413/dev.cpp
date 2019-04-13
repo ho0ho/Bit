@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include<string>
 using namespace std;
 
 #pragma warning (disable : 4996)
@@ -294,10 +295,8 @@ public:
 	Engine *sedan, *sports;
 
 	Car() {}
-
-	void autoStop(void) {
-		cout << "정지합니다" << endl;
-	}
+	~Car() { delete eye; delete sedan; delete sports; }
+	void autoStop(void) { cout << "정지합니다" << endl; }
 
 	void make_bbox(void) {
 		eye = new BlackBox;
@@ -318,61 +317,65 @@ public:
 	}
 };
 
+typedef char c;
+typedef c cc[10];
+typedef cc dim2[3];
+//
+//int main() {
+//	int user_s;
+//	char user_m;
+//	dim2 en = { "[e]co", "[s]ports", "[h]istory" };
+//	dim2 kn = { "연비주행", "과속주행", "히스토리" };
+//
+//	cout << "------------------------------------------" << endl;
+//	for (size_t i = 0; i < 3; i++)
+//		cout << en[i] << "\t\t" << kn[i] << endl;
+//	cout << "------------------------------------------" << endl;
+//	cout << "원하는 자동차 모드를 선택하시오 : ";
+//	cin >> user_m;
+//
+//	Car c;	
+//	c.make_bbox();
+//
+//	Engine *e = NULL;
+//	while (user_m != 'q') {
+//		if (user_m != 'h') {
+//			if (user_m == 'e') {
+//				e = c.sedan;
+//				cout << "에코모드를 선택하셨습니다.\n";
+//			}
+//			else if (user_m == 's') {
+//				e = c.sports;
+//				cout << "스피드모드를 선택하셨습니다.\n";
+//			}
+//			cin >> user_s;
+//			c.addEngine(user_m, user_s);
+//			e->speed_engine();
+//		}
+//		else {
+//			cout << "히스토리모드를 선택하셨습니다.\n";
+//			c.eye->display_history();
+//		}
+//
+//		cout << endl << endl;
+//		cout << "------------------------------------------" << endl;
+//		for (size_t i = 0; i < 3; i++)
+//			cout << en[i] << "\t\t" << kn[i] << endl;
+//		cout << "------------------------------------------" << endl;
+//		cout << "원하는 자동차 모드를 선택하시오 : ";
+//		cin >> user_m;
+//	}
+//
+//	getchar();
+//	return 0;
+//}
+
 int main() {
-	cout << "------------------------------------------" << endl;
-	cout << "[e]co \t연비주행" << endl;
-	cout << "[s]port \t과속주행" << endl;
-	cout << "[h]istory \t" << endl;
-	cout << "------------------------------------------" << endl;
-
-	Car c;	
-	c.make_bbox();
-
-	int user_s;
-	char user_m;
-	cout << "원하는 자동차 모드를 선택하시오 : ";
-	cin >> user_m;
-
-	/*enum MODE { ECO = 0, SPORTS, HISTORY };*/
-	/*char m_name[][10] = { "에코", "스피드", "히스토리" };
-	cout << m_name[e] << "모드를 선택하셨습니다." << endl;*/
-
-
-	while (user_m != 'q') {
-		switch (user_m) {
-		case 'e':
-			cout << "에코모드를 선택하셨습니다." << endl;
-			cout << "속도를 입력하시오: ";
-			cin >> user_s;
-
-			c.addEngine(user_m, user_s);
-			c.sedan->speed_engine();
-			break;
-		case 's':
-			cout << "스피드모드를 선택하셨습니다." << endl;
-			cout << "속도를 입력하시오: ";
-			cin >> user_s;
-			c.addEngine(user_m, user_s);
-			c.sports->speed_engine();
-			break;
-		case 'h':
-			cout << "히스토리 모드를 선택하셨습니다." << endl;
-			c.eye->display_history();
-			break;
-		default:
-			break;
-		}
-
-		cout << endl << endl;
-		cout << "------------------------------------------" << endl;
-		cout << "[e]co \t연비주행" << endl;
-		cout << "[s]port \t과속주행" << endl;
-		cout << "[h]istory \t" << endl;
-		cout << "------------------------------------------" << endl;
-		cout << "원하는 자동차 모드를 선택하시오 : ";
-		cin >> user_m;
-	}
-
-	getchar();
-	return 0;
+	string arr[25];				// 'e'입력받았을 때 "에코"로 바꿔받는 방법.
+	arr[1] = "echo";			// 아스키코드 이용
+	arr[4] = "history";
+	arr[15] = "speed";
+	char c;
+	cin >> c;
+	cout << arr[c % 25];
 }
