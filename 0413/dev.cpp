@@ -8,7 +8,7 @@ void swap1(int &ra, int &rb) {
 	rb = tmp;
 }
 
-void swap_p(int *(&pa), int *(&pb)) {	// int* 역할을 하는데 타입은 int&인 pa, pb 
+void swap_p(int *(&pa), int *(&pb)) {	// pa의 타입은 int *. 인자로 전달받는 메모리(int*)에 pa라는 이름 추가
 	int *tmp;							// => (int *)형에 대한 alias이기도 한 int &형으로 선언. 
 	tmp = pa;
 	pa = pb;
@@ -38,19 +38,65 @@ Number& NumberAdd(const Number &pa, const Number &pb) {
 	return *add;
 }
 
+//int main() {
+//	Number *pa = (Number *)malloc(sizeof(Number));
+//	pa->fst = 1;
+//	pa->snd = 2;
+//	Number *pb = (Number *)malloc(sizeof(Number));
+//	pb->fst = 10;
+//	pb->snd = 20;	
+//	
+//	Number &rpa = NumberAdd(*pa, *pb);
+//	cout << rpa.fst << ", " << rpa.snd << endl;
+//	free(&rpa);			// rpa 메모리 해제
+//	free(pa);
+//	free(pb);
+//	getchar();
+//	return 0;
+//}
+//
+//int main() {
+//	const int a = 10;
+//	const int *p = &a;
+//	const int *(&rp) = p;
+//
+//	cout << a << endl;
+//	cout << *p << endl;
+//	cout << *rp << endl;
+//	
+//	getchar();
+//	return 0;
+//}
+
+void func1(int *(&ppa)) {
+	*ppa = 10;
+}
+
+void func2(int *ppa) {
+	*ppa = 20;
+}
+
+int& func3(int &ra) {
+	return (ra = 10);
+}
+
+int func4(int &ra) {
+	return (ra = 40);
+}
+
 int main() {
-	Number *pa = (Number *)malloc(sizeof(Number));
-	pa->fst = 1;
-	pa->snd = 2;
-	Number *pb = (Number *)malloc(sizeof(Number));
-	pb->fst = 10;
-	pb->snd = 20;	
-	
-	Number &rpa = NumberAdd(*pa, *pb);
-	cout << rpa.fst << ", " << rpa.snd << endl;
-	free(&rpa);			// rpa 메모리 해제
-	free(pa);
-	free(pb);
-	getchar();
+	int a = 10;
+	int *pa = &a;
+	func1(pa);
+	cout << *pa << endl;
+	func2(pa);
+	cout << *pa << endl;
+
+	int &rb = func3(a);		// a, func3의 매개변수 ra, rb 세 변수 모두 동일한 하나의 메모리에 대한 이름
+	int b = func3(a);		// b는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음 => 레퍼런스값을 일반변수로 받을 때도 복사
+	int c = func4(a);		// c는 a, ra(func3의 매개변수)와는 다른 새로운 메모리. func3(a)의 값을 복사하여 받음
+	int &d = func4(a);		// error. func4(a)값은 상수. 레퍼런스변수는 상수값을 받을 수 없음.
+	const int &cd = func4(a);		// 레퍼런스변수가 상수값을 받으려면 const키워드 사용하면 됨.
+
 	return 0;
 }
