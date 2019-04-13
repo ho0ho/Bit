@@ -217,21 +217,161 @@ void eat(Wrap& w) {
 	w.eat();
 }
 
-int main() {
-	/*Brunch bb;
-	bob ob;
-	kok ok;
-	kim im;
-	bb.eattherice(ob);
-	bb.eatthesoup(ok);
-	bb.eatthekim(im);*/
+//int main() {
+//	/*Brunch bb;
+//	bob ob;
+//	kok ok;
+//	kim im;
+//	bb.eattherice(ob);
+//	bb.eatthesoup(ok);
+//	bb.eatthekim(im);*/
+//
+//	bob b;
+//	kok k;
+//	kim ki;
+//	eat(b);
+//	eat(k);
+//	eat(ki);
+//
+//	getchar();
+//	return 0;
+//}
 
-	bob b;
-	kok k;
-	kim ki;
-	eat(b);
-	eat(k);
-	eat(ki);
+#define SIZE 20
+static int cnt = 0;
+
+class Engine {
+private:
+	int km;
+	char mode;
+public:
+	Engine(int _km = 0, const char _mode = '?') : km(_km), mode(_mode) {}
+	~Engine() {}
+
+	void speed_engine(/*int _km, const char _mode*/) {
+		cout << "[" << mode << "]  " << km << "km" << endl;
+	}
+	void stop_engine(void) {
+		cout << "엔진을 정지합니다\n";
+	}
+
+	int get_km(void) { return km; }
+	char get_mode(void) { return mode; }
+	void set_km(int _km) { km = _km; }
+	void set_mode(int _mode) { mode = _mode; }
+
+	Engine& operator = (const Engine &other) {
+		set_km(other.km);
+		set_mode(other.mode);
+		return *this;
+	}
+};
+
+class BlackBox {
+private:
+	Engine *history;
+public:
+	void make_history_size(/*BlackBox &his, */int _size) {
+		history = new Engine[_size];
+	}
+
+	void update_history(/*BlackBox &_his, int _rkm, const char _rmode*/Engine e) {
+		history[cnt++] = e;
+	}
+
+	void display_history(void) {
+		int f = 0;
+		while (f < cnt) {
+			history[f++].speed_engine();
+		}
+	}
+};
+
+class Car {
+public:
+	BlackBox *eye;
+public:
+	Engine *sedan, *sports;
+
+	Car() {}
+
+	void autoStop(void) {
+		cout << "정지합니다" << endl;
+	}
+
+	void make_bbox(void) {
+		eye = new BlackBox;
+		eye->make_history_size(20);
+	}
+
+	void addEngine(char op, int speed) {
+		if (op == 'e') {
+			sedan = new Engine(speed, 'e');
+			eye->update_history(*sedan);
+		}
+		else if (op = 's') {
+			sports = new Engine(speed, 's');
+			eye->update_history(*sports);
+		}
+		else
+			cout << "wrong op" << endl;
+	}
+};
+
+int main() {
+	cout << "------------------------------------------" << endl;
+	cout << "[e]co \t연비주행" << endl;
+	cout << "[s]port \t과속주행" << endl;
+	cout << "[h]istory \t" << endl;
+	cout << "------------------------------------------" << endl;
+
+	Car c;	
+	c.make_bbox();
+
+	int user_s;
+	char user_m;
+	cout << "원하는 자동차 모드를 선택하시오 : ";
+	cin >> user_m;
+
+	/*enum MODE { ECO = 0, SPORTS, HISTORY };*/
+	/*char m_name[][10] = { "에코", "스피드", "히스토리" };
+	cout << m_name[e] << "모드를 선택하셨습니다." << endl;*/
+
+
+	while (user_m != 'q') {
+		switch (user_m) {
+		case 'e':
+			cout << "에코모드를 선택하셨습니다." << endl;
+			cout << "속도를 입력하시오: ";
+			cin >> user_s;
+
+			c.addEngine(user_m, user_s);
+			c.sedan->speed_engine();
+			break;
+		case 's':
+			cout << "스피드모드를 선택하셨습니다." << endl;
+			cout << "속도를 입력하시오: ";
+			cin >> user_s;
+			c.addEngine(user_m, user_s);
+			c.sports->speed_engine();
+			break;
+		case 'h':
+			cout << "히스토리 모드를 선택하셨습니다." << endl;
+			c.eye->display_history();
+			break;
+		default:
+			break;
+		}
+
+		cout << endl << endl;
+		cout << "------------------------------------------" << endl;
+		cout << "[e]co \t연비주행" << endl;
+		cout << "[s]port \t과속주행" << endl;
+		cout << "[h]istory \t" << endl;
+		cout << "------------------------------------------" << endl;
+		cout << "원하는 자동차 모드를 선택하시오 : ";
+		cin >> user_m;
+	}
 
 	getchar();
 	return 0;
