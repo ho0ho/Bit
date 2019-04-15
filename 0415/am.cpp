@@ -147,7 +147,7 @@ public:
 	~Vector() { delete[] vct; }
 
 	Vector(const Vector& cp) {						// copy constructor
-		count = cp.count;
+		count = cp.count;							// 복사생성자의 가장 큰 필요의 이유: 내부에 동적할당관련한 멤버변수가 있기때문
 		vct = new int[count];
 	/*	for (size_t i = 0; i < cp.count; i++)
 			vct[i] = cp.vct[i];*/
