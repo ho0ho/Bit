@@ -222,7 +222,7 @@ public:
 	int realgetHP() const { return getHP(); }
 	/*int getHp() const { return horsePower; }*/
 
-	virtual void view() const { cout << "HP: " << horsePower; }
+	virtual string view() const { return ("HP: " + horsePower); }
 };
 
 class InterCoolerEngine : public Engine {
@@ -235,7 +235,8 @@ public:
 	InterCoolerEngine(const InterCoolerEngine& cp) : Engine(cp.realgetHP()) { strcpy(cooler, cp.cooler); }
 	string getCooler() const { return cooler; }
 
-	void view() const { Engine::view(); cout << ", Cooler: " << cooler; }
+	void view_p() const { cout << "InterCoolerEngine" << endl; }
+	string view() const { return (Engine::view() + ", Cooler: " + cooler); }	// 오버라이딩에 의해 무효화된 Engine::view()를 호출
 };
 
 class TurboEngine : public InterCoolerEngine {
@@ -245,21 +246,61 @@ public:
 	TurboEngine(int hp, const char *_cooler, char _charger)
 		: InterCoolerEngine(hp, _cooler), turboCharger(_charger) {}
 	~TurboEngine() {}
-	void view() const { InterCoolerEngine::view(); cout << ", Charger: " << turboCharger; }
+	string view() const { return (InterCoolerEngine::view() + ", Charger: " + turboCharger); }
+};
+
+ostream& operator << (ostream& out, string str) {
+	out << str;
+	return out;
+}
+//
+//int main() {
+//	Engine eng1(150);
+//	InterCoolerEngine eng2(270, "박"), eng3(eng2);
+//	TurboEngine eng4(290, "선애", 'B');
+//
+//	Engine *arr[] = { &eng1, &eng2, &eng3, &eng4 };
+//
+//	//eng2.view();			// InterCoolerEngine::view() 호출 => "상속"자체로 알아서 자기꺼 찾아감
+//
+//	for (Engine *pe : arr) 	// virtual이 필요한 경우는, 이렇게 하나의 타입으로 여러가지 명시하고 싶을때!
+//		cout << pe->view() << endl;
+//	
+//	getchar();
+//	return 0;
+//}
+
+
+// 오버라이딩에 의해 무효화된 부모의 멤버함수 사용하기 = > Engine::view();
+// 순수가상함수가 하나라도 있으면 객체 생성 X
+// (C c1(c2);) == (C c1 = c2;) => (int a = 10;) == (int a(10);)
+// 없으면 컴파일러가 디폴트로 만들어주는(즉, 기본적으로 반드시 있어야 하는) 함수 => 1) 디폴트생성자 2) 복사생성자 3) 대입연산자 4) 소멸자
+
+class AAA {
+	int a;
+public:
+	AAA(int _a = 0) : a(_a) {}					// default constructor
+	~AAA() {}									// destructor	
+	void setA(int _data) { a = _data; }			
+	AAA(const AAA& cp) { a = cp.a; }			// copy contructor	
+	AAA& operator = (const AAA& right) { a = right.a; }	// assign operator
+};
+
+class BBB : public AAA{
+	int b;
+public:
+	BBB(int _b = 0) : AAA(), b(_b) {}			
+	~BBB() {}
+	void set_b(int _data) { b = _data; }
+	BBB(const BBB& cp) { b = cp.b; }
+	BBB& operator = (const BBB& right) { b = right.b; }
 };
 
 int main() {
-	Engine eng1(100);
-	InterCoolerEngine eng2(270, "박"), eng3(eng2);
-	TurboEngine eng4(290, "선애", 'B');
+	BBB ob1(20), ob2(ob1), ob3 = ob2, ob4;		// ob2, ob3는 copy constructor
+	ob4 = ob1;		// ob4는 assign operator
 
-	Engine *arr[] = { &eng1, &eng2, &eng3, &eng4 };
-
-	for (Engine *pe : arr) {
-		pe->view();
-		cout << endl;
-	}
-	
-	getchar();
 	return 0;
 }
+
+
