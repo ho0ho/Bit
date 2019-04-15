@@ -57,8 +57,16 @@ namespace carPark {
 using namespace carPark;
 int main() {
 	Car ob0, ob1(200), ob2(200, 30), ob3(200, 30, 40);
-	Car arr_c[] = { ob0, ob1, ob2, ob3 };
+	Car arr_c[] = { ob0, ob1, ob2, ob3 };		
 	for (Car c : arr_c) c.view();
+
+	Car **dim2 = new Car *[2];			// 2차원 배열 생성
+	for (size_t i = 0; i < 2; i++)
+		dim2[i] = new Car[3];
+
+	for (size_t i = 0; i < 2; i++)		// 2차원 배열 해제
+		free(dim2[i]);
+	free(dim2);
 
 	getchar();
 	return 0;
