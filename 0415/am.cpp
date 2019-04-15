@@ -249,10 +249,10 @@ public:
 	string view() const { return (InterCoolerEngine::view() + ", Charger: " + turboCharger); }
 };
 
-ostream& operator << (ostream& out, string str) {
-	out << str;
-	return out;
-}
+//ostream& operator << (ostream& out, string str) {
+//	out << str;
+//	return out;
+//}
 //
 //int main() {
 //	Engine eng1(150);
@@ -282,25 +282,309 @@ public:
 	AAA(int _a = 0) : a(_a) {}					// default constructor
 	~AAA() {}									// destructor	
 	void setA(int _data) { a = _data; }			
+	int getA() const { return a; }
+	virtual int get() const { return getA(); }
 	AAA(const AAA& cp) { a = cp.a; }			// copy contructor	
-	AAA& operator = (const AAA& right) { a = right.a; }	// assign operator
+	AAA& operator = (const AAA& right) { a = right.a; return *this; }	// assign operator
 };
 
 class BBB : public AAA{
 	int b;
 public:
-	BBB(int _b = 0) : AAA(), b(_b) {}			
+	BBB(int _a = 0, int _b = 0) : AAA(_a), b(_b) {}			
 	~BBB() {}
-	void set_b(int _data) { b = _data; }
+	void setB(int _data) { b = _data; }
+	int getB() const { return b; }
+	int get() const { return getB(); }
 	BBB(const BBB& cp) { b = cp.b; }
-	BBB& operator = (const BBB& right) { b = right.b; }
+	BBB& operator = (const BBB& right) { 
+		AAA::operator = (right);  // a = right.a;
+		b = right.b; 
+		return *this; 
+	}
+};
+//
+//int main() {
+//	BBB ob1(20, 5), ob2(ob1), ob3 = ob2, ob4;		// ob2, ob3는 copy constructor
+//	ob4 = ob1;		// ob4는 assign operator
+//
+//	AAA *p[] = { &ob1, &ob2, &ob3, &ob4 };
+//	for (AAA *a : p)
+//		cout << a->get() << endl;
+//
+//	getchar();
+//	return 0;
+//}
+
+ostream& operator << (ostream& out, string str) {
+	for (int i = 0; i < str.length(); i++)
+		out << str[i];
+	return out;
+}
+
+class Person {
+private:
+	string perName;
+	int perAge;
+public:
+	Person() {}
+	Person(string _name, int _age) : perName(_name), perAge(_age) {}
+	~Person() {}
+
+	Person& operator = (const Person& right) {
+		perName = right.perName;
+		perAge = right.perAge;
+	}
+
+	string getName() const { return perName; }
+	int getAge() const { return perAge; }
+	void setName(string name_new) { perName = name_new; }
+	void setAge(int age) { perAge = age; }
+	virtual void info() const {
+		cout << perName << "(" << perAge << ")";
+	}
+
+};
+
+class Subject {
+protected:
+	string subjName;
+	int subjScore;
+public:
+	Subject() {}
+	Subject(string _sName, int _sScore) : subjName(_sName), subjScore(_sScore) {}
+
+	void setScore(int score) { subjScore = score; }
+	int getScore() const { return subjScore; }
+
+	void info() const { cout << getScore() << "\t"; }
+};
+
+class Student : public Person {
+private:
+	const int id;
+	int totalScore;
+	int average;
+	Subject *p_subj;
+public:
+	Student(string name, int age, int _id) 
+		: Person(name, age), totalScore(0), average(0), p_subj(new Subject[3]), id(_id) {}
+	~Student() { delete[] p_subj; }
+
+	void setScore(int *_score) {
+		for (size_t i = 0; i < 3; i++) {
+			p_subj[i].setScore(_score[i]);
+			totalScore += _score[i];
+		}
+		average = totalScore / 3;
+	}
+
+	void editName(string name_new) { setName(name_new); }
+	void editAge(int age_new) { setAge(age_new); }
+	int getId() const { return id; }
+	/*int getTotalScore() const { return totalScore; }
+	int getAverage() const { return average; }*/
+	void info() const {
+		cout << "[" << getId() << "] ";
+		Person::info();
+	}
+	void infoAll() const {
+		info();
+		cout << " ";
+		for (size_t i = 0; i < 3; i++)
+			p_subj[i].info();
+		cout << totalScore << "\t" << average;
+	}
+};
+
+class GradeHandler {
+private:
+	string university;
+	Student **s_arr;
+	int cnt_s;
+	int size;
+public:
+	GradeHandler(string _university = "blank", int size = 10)
+		: university(_university), size(size), s_arr(new Student *[size]), cnt_s(0) {}
+	~GradeHandler() { delete[] s_arr; }
+
+	void addStudent(string name, int age, int id) {
+		s_arr[cnt_s++] = new Student(name, age, id);
+		Student *s = s_arr[cnt_s - 1];
+		cout << "[" << s->getId() << "] " << s->getName() << "(" << s->getAge() << ")"  << " 학생이 추가됨" << endl;
+	}
+
+	/*void addScore(int id, int *score) {
+		Student *f = find_id(id);
+		f->setScore(score);
+	}*/
+
+	void editStudent(string name, int id, string name_new, int age_new) {
+		Student *s = find(name, id);
+		if (!s) cout << "존재하지 않는 이름입니다." << endl;
+		else {
+			Person p(s->getName(), s->getAge());
+			s->editName(name_new);
+			s->editAge(age_new);
+			
+			cout << "[" << s->getId() << "] ";
+			p.info();
+			cout << "이 ";
+			s->info();
+			cout << "로 수정됨" << endl;
+		}
+	}
+
+	void deleteStudent(string name, int id) {
+		Student *s = find(name, id);
+		// 학번에 [*]표시
+	}
+
+	Student *find_id(int id) {
+		size_t i;
+		for (i = 0; i < cnt_s; i++)
+			if (s_arr[i]->getId() == id) break;
+		if (i >= cnt_s) return NULL;
+		return s_arr[i];
+	}
+
+	Student *find(string name, int id) {
+		size_t i;
+		for(i = 0; i < cnt_s; i++)
+			if ((s_arr[i])->getName() == name && s_arr[i]->getId() == id) 
+				break;
+		if (i >= cnt_s) return NULL;
+		return s_arr[i];
+	}
+
+	void toPrintAll() {
+		for (size_t i = 0; i < cnt_s; i++) {
+			s_arr[i]->infoAll();
+			cout << endl;
+		}
+	}
+
+
 };
 
 int main() {
-	BBB ob1(20), ob2(ob1), ob3 = ob2, ob4;		// ob2, ob3는 copy constructor
-	ob4 = ob1;		// ob4는 assign operator
+	int managedId = 0;
+	int cnt_s;
+	char university[10];
+
+	cout << "학교명과 학생수를 입력하시오" << endl;
+	cout << "학교명: ";
+	cin >> university;
+	cout << "학생수: ";
+	cin >> cnt_s;
+
+	GradeHandler g(university, cnt_s);
+
+	int comm, comm2;
+	
+	char name_s[10], name_new[10];
+	int age_s, id_s, age_new, score;
+	int sScore[3];
+	string subjName[] = { "국어", "영어", "수학" };
+	string menu_student[] = { "학생추가", "학생수정", "학생삭제" };
+	string menu_score[] = { "성적출력", "성적추가" };
+	Student *st = NULL;
+
+	cout << "--------------------------------" << endl;
+	cout << "1. 학생관리" << endl;
+	cout << "2. 성적관리" << endl;
+	cout << "[선택] ";
+	cin >> comm;
+
+	char cont[2] = "y";
+	while (comm != 'q') {
+		switch (comm) {
+		case 1:
+			cout << "--------------------------------" << endl;
+			cout << "1. 학생관리" << endl;
+			for (size_t i = 0; i < 3; i++)
+				cout << comm << "-" << i + 1 << ". " << menu_student[i] << endl;
+			cout << "[선택] ";
+			cin >> comm2;
+			switch (comm2) {
+			case 1:
+				while (cont[0] != 'n') {
+					cout << "[학생 추가] 이름: ";
+					cin >> name_s;
+					cout << "[학생 추가] 나이: ";
+					cin >> age_s;
+					g.addStudent(name_s, age_s, managedId++);
+					cout << "Continue?(y/n) ";
+					cin >> cont;
+				}
+				cout << "------ 추가작업 완료 ------\n\n";
+				break;
+			case 2:
+				cout << "[" << menu_student[comm2 - 1] << "] 이름: ";
+				cin >> name_s;
+				cout << "[학생 수정] 학번: ";
+				cin >> id_s;
+				cout << "[학생 수정] 변경할 이름: ";
+				cin >> name_new;
+				cout << "[학생 수정] 변경할 나이: ";
+				cin >> age_new;
+				g.editStudent(name_s, id_s, name_new, age_new);
+				break;
+			case 3:
+				cout << "[학생 삭제] 이름: ";
+				cin >> name_s;
+				cout << "[학생 삭제] 학번: ";
+				cin >> id_s;
+				g.deleteStudent(name_s, id_s);
+				break;
+			default:
+				cout << "wrong comm2" << endl;
+				break;
+			}
+			break;
+		case 2:
+			cout << "2. 성적관리" << endl;
+			for (size_t i = 0; i < 2; i++)
+				cout << comm << "-" << i + 1 << ". " << menu_score[i] << endl;
+			cout << "[선택] ";
+			cin >> comm2;
+			switch (comm2) {
+			case 1:
+				// print
+				cout << " 학번\t이름(나이)\t국어\t영어\t수학\t총점\t평균\n";
+				g.toPrintAll();
+				break;
+			case 2:
+				cout << "[성적 추가] 학번: ";
+				cin >> id_s;
+				st = g.find_id(id_s);
+				if (!st) {
+					cout << "wrong id\n";
+					break;
+				}
+				for (size_t i = 0; i < 3; i++) {
+					cout << subjName[i] << "점수: ";
+					cin >> sScore[i];
+				}
+				st->setScore(sScore);
+				st->infoAll();
+				break;
+			}
+			break;
+		default:
+			cout << "wrong input\n";
+			break;
+		}
+
+		cout << "\n\n--------------------------------" << endl;
+		cout << "1. 학생관리" << endl;
+		cout << "2. 성적관리" << endl;
+		cout << "[선택] ";
+		cin >> comm;
+	}
+
+
+
 
 	return 0;
 }
-
-
