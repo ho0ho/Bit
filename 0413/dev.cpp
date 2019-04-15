@@ -320,62 +320,62 @@ public:
 typedef char c;
 typedef c cc[10];
 typedef cc dim2[3];
-//
-//int main() {
-//	int user_s;
-//	char user_m;
-//	dim2 en = { "[e]co", "[s]ports", "[h]istory" };
-//	dim2 kn = { "연비주행", "과속주행", "히스토리" };
-//
-//	cout << "------------------------------------------" << endl;
-//	for (size_t i = 0; i < 3; i++)
-//		cout << en[i] << "\t\t" << kn[i] << endl;
-//	cout << "------------------------------------------" << endl;
-//	cout << "원하는 자동차 모드를 선택하시오 : ";
-//	cin >> user_m;
-//
-//	Car c;	
-//	c.make_bbox();
-//
-//	Engine *e = NULL;
-//	while (user_m != 'q') {
-//		if (user_m != 'h') {
-//			if (user_m == 'e') {
-//				e = c.sedan;
-//				cout << "에코모드를 선택하셨습니다.\n";
-//			}
-//			else if (user_m == 's') {
-//				e = c.sports;
-//				cout << "스피드모드를 선택하셨습니다.\n";
-//			}
-//			cin >> user_s;
-//			c.addEngine(user_m, user_s);
-//			e->speed_engine();
-//		}
-//		else {
-//			cout << "히스토리모드를 선택하셨습니다.\n";
-//			c.eye->display_history();
-//		}
-//
-//		cout << endl << endl;
-//		cout << "------------------------------------------" << endl;
-//		for (size_t i = 0; i < 3; i++)
-//			cout << en[i] << "\t\t" << kn[i] << endl;
-//		cout << "------------------------------------------" << endl;
-//		cout << "원하는 자동차 모드를 선택하시오 : ";
-//		cin >> user_m;
-//	}
-//
-//	getchar();
-//	return 0;
-//}
 
 int main() {
-	string arr[25];				// 'e'입력받았을 때 "에코"로 바꿔받는 방법.
-	arr[1] = "echo";			// 아스키코드 이용
-	arr[4] = "history";
-	arr[15] = "speed";
-	char c;
-	cin >> c;
-	cout << arr[c % 25];
+	int user_s;
+	char user_m;
+	dim2 en = { "[e]co", "[s]ports", "[h]istory" };
+	dim2 kn = { "연비주행", "과속주행", "히스토리" };
+
+	cout << "------------------------------------------" << endl;
+	for (size_t i = 0; i < 3; i++)
+		cout << en[i] << "\t\t" << kn[i] << endl;
+	cout << "------------------------------------------" << endl;
+	cout << "원하는 자동차 모드를 선택하시오 : ";
+	cin >> user_m;
+
+	Car c;	
+	c.make_bbox();
+
+	Engine *e = NULL;
+	while (user_m != 'q') {
+		if (user_m == 'h') {
+			cout << "히스토리모드를 선택하셨습니다.\n";
+			c.eye->display_history();
+		}
+		else {
+			if (user_m == 'e') {
+				e = c.sedan;
+				cout << "에코모드를 선택하셨습니다.\n";
+			}
+			else if (user_m == 's') {
+				e = c.sports;
+				cout << "스피드모드를 선택하셨습니다.\n";
+			}
+			cin >> user_s;
+			c.addEngine(user_m, user_s);
+			e->speed_engine();
+		}
+
+		cout << endl << endl;
+		cout << "------------------------------------------" << endl;
+		for (size_t i = 0; i < 3; i++)
+			cout << en[i] << "\t\t" << kn[i] << endl;
+		cout << "------------------------------------------" << endl;
+		cout << "원하는 자동차 모드를 선택하시오 : ";
+		cin >> user_m;
+	}
+
+	getchar();
+	return 0;
 }
+
+//int main() {
+//	string arr[25];				// 'e'입력받았을 때 "에코"로 바꿔받는 방법.
+//	arr[1] = "echo";			// 아스키코드 이용 
+//	arr[4] = "history";
+//	arr[15] = "speed";
+//	char c;
+//	cin >> c;
+//	cout << arr[c % 25];
+//}
