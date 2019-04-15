@@ -53,21 +53,87 @@ namespace carPark {
 		void view() { cout << power << ", " << gas << ", " << brake << endl; }
 	};
 }
+//
+//using namespace carPark;
+//int main() {
+//	Car ob0, ob1(200), ob2(200, 30), ob3(200, 30, 40);
+//	Car arr_c[] = { ob0, ob1, ob2, ob3 };		
+//	for (Car c : arr_c) c.view();
+//
+//	Car **dim2 = new Car *[2];			// 2차원 배열 생성
+//	for (size_t i = 0; i < 2; i++)
+//		dim2[i] = new Car[3];
+//
+//	for (size_t i = 0; i < 2; i++)		// 2차원 배열 해제
+//		delete[] dim2[i];
+//	delete[] dim2;
+//
+//	getchar();
+//	return 0;
+//}
 
-using namespace carPark;
+#include <time.h>
+#include <iomanip>
+
+class Matrix {
+private:
+	int rows;
+	int cols;
+	int **mat;
+	const int cnt;	// const 멤버변수는 반드시 "생성자"의 초기화섹션에서 초기화가 이루어져야 한다.
+public:
+	Matrix(int _rows, int _cols) : rows(_rows), cols(_cols), cnt(0) {		
+		mat = new int *[rows];
+		for (size_t i = 0; i < rows; i++)
+			mat[i] = new int[cols];
+	}
+	
+	~Matrix() {
+		for (size_t i = 0; i < rows; i++)
+			delete[] mat[i];
+		delete[] mat;
+	}
+
+	int& element(int _row, int _col) const { return mat[_row][_col]; }
+	int getRows() const { return rows; }
+	int getCols() const { return cols; }
+	void print() const {
+		for (size_t i = 0; i < rows; i++) {
+			for (size_t j = 0; j < cols; j++)
+				cout << setw(3) << mat[i][j] << " ";
+			cout << endl;
+		}
+	}
+
+	void setRand() {
+		srand((unsigned)time(NULL));
+		for (size_t i = 0; i < rows; i++) 
+			for (size_t j = 0; j < cols; j++)
+				mat[i][j] = rand() % 100 + 1;
+	}
+
+	int maxPixel() {
+		int max = mat[0][0];
+		for (size_t i = 0; i < rows; i++) {
+			for (size_t j = 0; j < cols; j++)
+				if (max < mat[i][j]) max = mat[i][j];
+		}
+		return max;
+	}
+};
+
+
 int main() {
-	Car ob0, ob1(200), ob2(200, 30), ob3(200, 30, 40);
-	Car arr_c[] = { ob0, ob1, ob2, ob3 };		
-	for (Car c : arr_c) c.view();
+	Matrix mat(110, 55);
 
-	Car **dim2 = new Car *[2];			// 2차원 배열 생성
-	for (size_t i = 0; i < 2; i++)
-		dim2[i] = new Car[3];
-
-	for (size_t i = 0; i < 2; i++)		// 2차원 배열 해제
-		delete[] dim2[i];
-	delete[] dim2;
+	mat.setRand();
+	mat.print();
+	cout << endl;
+	cout << "mat[선애][바보]: " << mat.element(3, 4) << endl << endl;
+	cout << "행복: " << mat.getRows() << ", 열라면: " << mat.getCols() << endl;
+	cout << "최대값: " << mat.maxPixel() << endl;
+	cout << "동열이가 한거임" << endl;
 
 	getchar();
 	return 0;
-}
+} 
