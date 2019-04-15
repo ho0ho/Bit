@@ -122,18 +122,85 @@ public:
 	}
 };
 
+//
+//int main() {
+//	Matrix mat(110, 55);
+//
+//	mat.setRand();
+//	mat.print();
+//	cout << endl;
+//	cout << "mat[선애][바보]: " << mat.element(3, 4) << endl << endl;
+//	cout << "행복: " << mat.getRows() << ", 열라면: " << mat.getCols() << endl;
+//	cout << "최대값: " << mat.maxPixel() << endl;
+//	cout << "동열이가 한거임" << endl;
+//
+//	getchar();
+//	return 0;
+//} 
+
+class Vector {
+private:
+	int count;
+	int *vct;
+public:
+	Vector(int _count = 10) : count(_count), vct(new int[count]) {}
+	~Vector() { delete[] vct; }
+
+	Vector(const Vector& cp) {						// copy constructor
+		count = cp.count;
+		vct = new int[count];
+	/*	for (size_t i = 0; i < cp.count; i++)
+			vct[i] = cp.vct[i];*/
+		memcpy(vct, cp.vct, sizeof(int)*count);		// 메모리복사
+	}
+
+	Vector& operator = (const Vector& right) {		// operator =
+		if (this != &right) return *this;			// Vector객체간의 =연산이 정의되지 않았으므로 포인터로 비교해야함
+		if (count != right.count) {
+			delete[] vct;
+			count = right.count;
+			vct = new int[count];
+		}
+
+		for (size_t i = 0; i < count; i++)
+			vct[i] = right.vct[i];
+		return *this;
+	}
+
+	void randset_vector() {
+		for (size_t i = 0; i < count; i++)
+			vct[i] = rand() % 100 + 1;
+	}
+
+	void view_vector() {
+		for (size_t i = 0; i < count; i++)
+			cout << vct[i] << " ";
+		cout << endl;
+	}
+
+};
 
 int main() {
-	Matrix mat(110, 55);
+	Vector vt;
 
-	mat.setRand();
-	mat.print();
-	cout << endl;
-	cout << "mat[선애][바보]: " << mat.element(3, 4) << endl << endl;
-	cout << "행복: " << mat.getRows() << ", 열라면: " << mat.getCols() << endl;
-	cout << "최대값: " << mat.maxPixel() << endl;
-	cout << "동열이가 한거임" << endl;
+	srand((unsigned)time(NULL));
+	vt.randset_vector();
+	vt.view_vector();
+
+	Vector vt2(vt);		// copy constructor
+	vt2.view_vector();
+
+	Vector vt3(5);
+	vt3.randset_vector();
+	vt3.view_vector();
+
+	Vector vt4;
+	vt4 = vt3;			// operator = 
+	vt3.view_vector();
+
+	Vector vt5 = vt3;	// copy constructor
+	vt5.view_vector();
 
 	getchar();
 	return 0;
-} 
+}
