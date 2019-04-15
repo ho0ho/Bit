@@ -65,8 +65,8 @@ int main() {
 		dim2[i] = new Car[3];
 
 	for (size_t i = 0; i < 2; i++)		// 2차원 배열 해제
-		free(dim2[i]);
-	free(dim2);
+		delete[] dim2[i];
+	delete[] dim2;
 
 	getchar();
 	return 0;
