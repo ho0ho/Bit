@@ -180,27 +180,86 @@ public:
 
 };
 
+//int main() {
+//	Vector vt;
+//
+//	srand((unsigned)time(NULL));
+//	vt.randset_vector();
+//	vt.view_vector();
+//
+//	Vector vt2(vt);		// copy constructor
+//	vt2.view_vector();
+//
+//	Vector vt3(5);
+//	vt3.randset_vector();
+//	vt3.view_vector();
+//
+//	Vector vt4;
+//	vt4 = vt3;			// operator = 
+//	vt3.view_vector();
+//
+//	Vector vt5 = vt3;	// copy constructor
+//	vt5.view_vector();
+//
+//	getchar();
+//	return 0;
+//}
+
+#include <string.h>
+#pragma warning(disable : 4996)
+
+class Engine {
+private:
+	int horsePower;
+	int getHP() const { return horsePower; }
+public:
+	Engine(int hp) {
+		if (120 <= hp && hp <= 290) horsePower = hp;
+		else horsePower = -1;
+	}
+	~Engine() {}
+
+	int realgetHP() const { return getHP(); }
+	/*int getHp() const { return horsePower; }*/
+
+	virtual void view() const { cout << "HP: " << horsePower; }
+};
+
+class InterCoolerEngine : public Engine {
+protected:
+	char cooler[5];
+public:
+	InterCoolerEngine(int hp, const char *_cooler) : Engine(hp) { strcpy(cooler, _cooler); }
+	~InterCoolerEngine() {}
+
+	InterCoolerEngine(const InterCoolerEngine& cp) : Engine(cp.realgetHP()) { strcpy(cooler, cp.cooler); }
+	string getCooler() const { return cooler; }
+
+	void view() const { Engine::view(); cout << ", Cooler: " << cooler; }
+};
+
+class TurboEngine : public InterCoolerEngine {
+private:
+	char turboCharger;
+public:
+	TurboEngine(int hp, const char *_cooler, char _charger)
+		: InterCoolerEngine(hp, _cooler), turboCharger(_charger) {}
+	~TurboEngine() {}
+	void view() const { InterCoolerEngine::view(); cout << ", Charger: " << turboCharger; }
+};
+
 int main() {
-	Vector vt;
+	Engine eng1(100);
+	InterCoolerEngine eng2(270, "¹Ú"), eng3(eng2);
+	TurboEngine eng4(290, "¼±¾Ö", 'B');
 
-	srand((unsigned)time(NULL));
-	vt.randset_vector();
-	vt.view_vector();
+	Engine *arr[] = { &eng1, &eng2, &eng3, &eng4 };
 
-	Vector vt2(vt);		// copy constructor
-	vt2.view_vector();
-
-	Vector vt3(5);
-	vt3.randset_vector();
-	vt3.view_vector();
-
-	Vector vt4;
-	vt4 = vt3;			// operator = 
-	vt3.view_vector();
-
-	Vector vt5 = vt3;	// copy constructor
-	vt5.view_vector();
-
+	for (Engine *pe : arr) {
+		pe->view();
+		cout << endl;
+	}
+	
 	getchar();
 	return 0;
 }
