@@ -56,9 +56,7 @@ public:
 	Number& operator = (const Number &right) { fir = right.fir; sec = right.sec; return *this; }
 	bool operator == (const Number& right) { return (fir == right.fir && sec == right.sec); }		// overloading(member method)
 
-	friend bool operator == (const Number& n1, const Number& n2) {		// overloading(friend function)
-		return (n1.gettor_fir() == n2.gettor_fir() && n1.gettor_sec() == n2.gettor_sec());
-	}
+	friend bool operator == (const Number& n1, const Number& n2);	// overloading(friend function)		
 
 	void settor(int f, int s) { fir = f; sec = s; }
 	int gettor_fir() const { return fir; }
@@ -66,7 +64,9 @@ public:
 };
 
 bool operator == (const Number& n1, const Number& n2) {		// overloading(global function)
-	return (n1.gettor_fir() == n2.gettor_fir() && n1.gettor_sec() == n2.gettor_sec());			
+	// return (n1.gettor_fir() == n2.gettor_fir() && n1.gettor_sec() == n2.gettor_sec());	// global일때 
+	return (n1.fir == n2.fir && n1.sec == n2.sec);			// friend일때
+	// return (n1 == n2);
 }
 
 int main() {
