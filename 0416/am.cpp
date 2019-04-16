@@ -55,8 +55,14 @@ public:
 
 	Number& operator = (const Number &right) { fir = right.fir; sec = right.sec; return *this; }
 	bool operator == (const Number& right) { return (fir == right.fir && sec == right.sec); }		// overloading(member method)
+	Number& operator + (int num) {
+		fir += num;
+		sec += num;
+		return *this;
+	}
 
 	friend bool operator == (const Number& n1, const Number& n2);	// overloading(friend function)		
+	friend Number& operator + (int num, Number& n);
 
 	void settor(int f, int s) { fir = f; sec = s; }
 	int gettor_fir() const { return fir; }
@@ -69,10 +75,19 @@ bool operator == (const Number& n1, const Number& n2) {		// overloading(global f
 	// return (n1 == n2);
 }
 
+Number& operator + (int num, Number& n) {		// 교환법칙까지 만족하게 하기 위한 전역함수 오버로딩
+	n.fir += num;
+	n.sec += num;
+	return n;
+}
+
 int main() {
 	Number a(10, 20), b(20, 40), c(a);			// copy constructor
 	if (a == b) cout << "true" << endl;
 	else cout << "false" << endl;
+
+	a = a + 5;
+	cout << a.gettor_fir() << ", " << a.gettor_sec() << endl;
 
 	getchar();
 	return 0;
