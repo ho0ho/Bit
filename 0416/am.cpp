@@ -86,7 +86,10 @@ int main() {
 	if (a == b) cout << "true" << endl;
 	else cout << "false" << endl;
 
-	a = a + 5;
+	a = a + 5;			// 멤버함수 operator + () 호출
+	cout << a.gettor_fir() << ", " << a.gettor_sec() << endl;
+
+	a = 5 + a;			// 전역함수 operator + () 호출
 	cout << a.gettor_fir() << ", " << a.gettor_sec() << endl;
 
 	getchar();
