@@ -54,19 +54,24 @@ public:
 	Number(const Number& cp) { fir = cp.fir; sec = cp.sec; }
 
 	Number& operator = (const Number &right) { fir = right.fir; sec = right.sec; return *this; }
-	bool operator == (int num) { return (fir == num); }		// overloading(member method)
+	bool operator == (const Number& right) { return (fir == right.fir && sec == right.sec); }		// overloading(member method)
+
+	friend bool operator == (const Number& n1, const Number& n2) {		// overloading(friend function)
+		return (n1.gettor_fir() == n2.gettor_fir() && n1.gettor_sec() == n2.gettor_sec());
+	}
 
 	void settor(int f, int s) { fir = f; sec = s; }
-	int gettor() const { return fir; }
+	int gettor_fir() const { return fir; }
+	int gettor_sec() const { return sec; }
 };
 
 bool operator == (const Number& n1, const Number& n2) {		// overloading(global function)
-	return n1.gettor() == n2.gettor();
+	return (n1.gettor_fir() == n2.gettor_fir() && n1.gettor_sec() == n2.gettor_sec());			
 }
 
 int main() {
 	Number a(10, 20), b(20, 40), c(a);			// copy constructor
-	if (a == c) cout << "true" << endl;
+	if (a == b) cout << "true" << endl;
 	else cout << "false" << endl;
 
 	getchar();
